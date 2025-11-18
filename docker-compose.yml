@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  app:
+    image: apitotalpost/api:latest
+    ports:
+      - "8181:8181"
+    depends_on:
+      - redis
+    environment:
+      - NODE_ENV=production
+    volumes:
+      - ./data:/app/data
+    env_file:
+      - .env
+    restart: unless-stopped
+    command: node server.js
+
+  redis:
+    image: redis:7.0.15-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    restart: unless-stopped
+
+volumes:
+  redis_data:
